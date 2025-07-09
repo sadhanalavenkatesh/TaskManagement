@@ -1,5 +1,6 @@
 package com.task.TaskManagement.Entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -11,14 +12,15 @@ public class ProjectsEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "project_id")
-    private Long projectId;
+    private Integer projectId;
 
     @Column(name = "project_name", nullable = false, length = 100)
     private String projectName;
 
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "client_id", nullable = false)
-//    private ClientEntity client;
+   @ManyToOne(fetch = FetchType.LAZY)
+   @JoinColumn(name = "client_id", nullable = false)
+   @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+    private ClientEntity client;
 
     @Column(name = "priority", length = 20)
     private String priority;
@@ -43,11 +45,12 @@ public class ProjectsEntity {
 
     // Getters and Setters
 
-    public Long getProjectId() {
+
+    public Integer getProjectId() {
         return projectId;
     }
 
-    public void setProjectId(Long projectId) {
+    public void setProjectId(Integer projectId) {
         this.projectId = projectId;
     }
 
@@ -59,13 +62,13 @@ public class ProjectsEntity {
         this.projectName = projectName;
     }
 
-//    public ClientEntity getClient() {
-//        return client;
-//    }
-//
-//    public void setClient(ClientEntity client) {
-//        this.client = client;
-//    }
+    public ClientEntity getClient() {
+        return client;
+    }
+
+   public void setClient(ClientEntity client) {
+       this.client = client;
+    }
 
     public String getPriority() {
         return priority;

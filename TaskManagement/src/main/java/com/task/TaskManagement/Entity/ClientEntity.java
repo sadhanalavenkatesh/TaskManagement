@@ -3,6 +3,7 @@ package com.task.TaskManagement.Entity;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Table(name = "client")
@@ -22,6 +23,9 @@ public class ClientEntity {
     private String conatctEmail;
     private LocalDateTime createdAt = LocalDateTime.now();
     private LocalDateTime updatedAt = LocalDateTime.now();
+    @OneToMany(mappedBy = "client", fetch = FetchType.LAZY)
+    private List<ProjectsEntity> projects;
+
     @Column(length = 1000)
     private String remarks;
 
