@@ -1,4 +1,7 @@
 package com.task.TaskManagement.dao;
 
-public interface TasksRepository {
+import com.task.TaskManagement.Entity.TasksEntity;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface TasksRepository extends JpaRepository<TasksEntity,Integer> {
 }
