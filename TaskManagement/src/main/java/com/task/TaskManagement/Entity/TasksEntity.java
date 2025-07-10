@@ -2,6 +2,7 @@ package com.task.TaskManagement.Entity;
 
 
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -13,13 +14,14 @@ public class TasksEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "task_id")
-    private Long taskId;
+    private Integer taskId;
 
     @Column(name = "task_date", nullable = false)
     private LocalDate taskDate;
 
    @ManyToOne(fetch = FetchType.LAZY)
    @JoinColumn(name = "project_id", nullable = false)
+   @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private ProjectsEntity project;
 
     @Column(name = "task_name", nullable = false, length = 100)
@@ -42,11 +44,12 @@ public class TasksEntity {
 
     // Getters and Setters
 
-    public Long getTaskId() {
+
+    public Integer getTaskId() {
         return taskId;
     }
 
-    public void setTaskId(Long taskId) {
+    public void setTaskId(Integer taskId) {
         this.taskId = taskId;
     }
 

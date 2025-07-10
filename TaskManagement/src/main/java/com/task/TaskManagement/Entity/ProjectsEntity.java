@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Table(name="projects")
@@ -17,7 +18,7 @@ public class ProjectsEntity {
     @Column(name = "project_name", nullable = false, length = 100)
     private String projectName;
 
-   @ManyToOne(fetch = FetchType.LAZY)
+  @ManyToOne(fetch = FetchType.LAZY)
    @JoinColumn(name = "client_id", nullable = false)
    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private ClientEntity client;
@@ -42,8 +43,12 @@ public class ProjectsEntity {
 
     @Column(name = "updated_at")
     private LocalDateTime updatedAt = LocalDateTime.now();
+    @OneToMany(mappedBy = "project", fetch = FetchType.LAZY)
+    private List<TasksEntity> tasks;
 
     // Getters and Setters
+
+
 
 
     public Integer getProjectId() {
