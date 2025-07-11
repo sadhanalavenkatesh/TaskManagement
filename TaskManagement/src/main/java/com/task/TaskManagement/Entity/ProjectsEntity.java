@@ -43,13 +43,22 @@ public class ProjectsEntity {
 
     @Column(name = "updated_at")
     private LocalDateTime updatedAt = LocalDateTime.now();
+    @Column(name = "is_deleted")
+    private boolean isDeleted = false;
     @OneToMany(mappedBy = "project", fetch = FetchType.LAZY)
     private List<TasksEntity> tasks;
+
 
     // Getters and Setters
 
 
+    public boolean isDeleted() {
+        return isDeleted;
+    }
 
+    public void setIsDeleted(boolean deleted) {
+        isDeleted = deleted;
+    }
 
     public Integer getProjectId() {
         return projectId;
@@ -130,4 +139,6 @@ public class ProjectsEntity {
     public void setUpdatedAt(LocalDateTime updatedAt) {
         this.updatedAt = updatedAt;
     }
+
+
 }

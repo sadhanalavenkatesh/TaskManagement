@@ -4,9 +4,11 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.task.TaskManagement.Entity.ClientEntity;
 import com.task.TaskManagement.Entity.TasksEntity;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Pattern;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
+
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -14,8 +16,10 @@ import java.util.List;
 
 public class ProjectsDto {
     private Integer projectId;
+    @Pattern(regexp = "^[A-Za-z0-9\\s]+$", message = "Project name can only contain letters, numbers, and spaces")
     private String projectName;
     private ClientEntity client;
+    @Pattern(regexp = "^(High|Medium|Low)$", message = "Priority must be High, Medium, or Low")
     private String priority;
     private LocalDate startDate;
     private LocalDate endDate;
@@ -24,6 +28,15 @@ public class ProjectsDto {
     private LocalDateTime updatedAt = LocalDateTime.now();
     private List<TasksEntity> tasks;
     private Integer clientId;
+    private boolean isDeleted = false;
+
+    public boolean isDeleted() {
+        return isDeleted;
+    }
+
+    public void setDeleted(boolean deleted) {
+        isDeleted = deleted;
+    }
 
     public Integer getProjectId() {
         return projectId;

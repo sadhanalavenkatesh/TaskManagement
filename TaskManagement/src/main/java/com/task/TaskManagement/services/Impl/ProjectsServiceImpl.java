@@ -56,12 +56,15 @@ public class ProjectsServiceImpl implements ProjectsService {
 
     @Override
     public ResponseWrapper<String> deleteProject(Integer id) {
-        if (!projectRepository.existsById(id)) {
-        throw new EntityNotFoundException("Project not found");
+        ProjectsEntity project = projectRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Project not found"));
+
+        project.setIsDeleted(true);  // Mark as deleted
+        projectRepository.save(project); // Save the updated project
+
+        return new ResponseWrapper<>("Project deleted successfully",null);
     }
-        projectRepository.deleteById(id);
-        return new ResponseWrapper<>("Project deleted successfully", null);
-    }
+
 
     @Override
     public ResponseWrapper<ProjectsEntity> getProjectById(Integer id) {
