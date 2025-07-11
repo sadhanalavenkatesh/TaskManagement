@@ -41,6 +41,9 @@ public class TasksEntity {
 
     @Column(name = "updated_at")
     private LocalDateTime updatedAt = LocalDateTime.now();
+    @Column(name = "is_deleted")
+    private boolean isDeleted = false;
+
 
     // Getters and Setters
 
@@ -115,5 +118,13 @@ public class TasksEntity {
 
     public void setUpdatedAt(LocalDateTime updatedAt) {
         this.updatedAt = updatedAt;
+    }
+
+    public boolean isDeleted() {
+        return isDeleted;
+    }
+
+    public void setIsDeleted(boolean deleted) {
+        isDeleted = deleted;
     }
 }

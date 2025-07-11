@@ -4,6 +4,7 @@ import com.task.TaskManagement.Entity.ProjectsEntity;
 import com.task.TaskManagement.dto.ProjectsDto;
 import com.task.TaskManagement.dto.ResponseWrapper;
 import com.task.TaskManagement.services.ProjectsService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,7 +20,7 @@ public class ProjectsController {
     private ProjectsService projectService;
 
     @PostMapping
-    public ResponseEntity<ResponseWrapper<ProjectsEntity>> createProject(@RequestBody ProjectsDto dto) {
+    public ResponseEntity<ResponseWrapper<ProjectsEntity>> createProject(@Valid @RequestBody ProjectsDto dto) {
         return ResponseEntity.status(HttpStatus.OK).body(projectService.createProject(dto));
     }
 

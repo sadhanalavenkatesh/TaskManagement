@@ -1,15 +1,19 @@
 package com.task.TaskManagement.services.Impl;
 
-import com.task.TaskManagement.Entity.ClientEntity;
+
 import com.task.TaskManagement.Entity.ProjectsEntity;
 import com.task.TaskManagement.Entity.TasksEntity;
 import com.task.TaskManagement.dao.ProjectsRepository;
 import com.task.TaskManagement.dao.TasksRepository;
+import com.task.TaskManagement.dto.ResponseWrapper;
+import com.task.TaskManagement.dto.TasksDto;
 import com.task.TaskManagement.services.TasksService;
 import jakarta.persistence.EntityNotFoundException;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -18,43 +22,60 @@ public class TasksServiceImpl implements TasksService {
     private TasksRepository taskRepository;
     @Autowired
     private ProjectsRepository projectRepository;
-    @Override
-    public TasksEntity createTask(TasksEntity task) {
-        int projectId = task.getProject().getProjectId(); // only ID is coming from request
-        ProjectsEntity fullProject = projectRepository.findById(projectId)
-                .orElseThrow(() -> new RuntimeException("Client not found with id: " + projectId));
 
-        task.setProject(fullProject);
-        return taskRepository.save(task);
+    @Override
+    public ResponseWrapper<TasksEntity> createTask(TasksDto dto) {
+        ProjectsEntity project = projectRepository.findById(dto.getProjectId())
+                .orElseThrow(() -> new RuntimeException("Project not found with id: " + dto.getProjectId()));
+
+        TasksEntity task= new TasksEntity();
+        BeanUtils.copyProperties(dto, task); // Automatically maps matching fields
+        task.setProject(project);
+        task.setCreatedAt(LocalDateTime.now());
+        task.setUpdatedAt(LocalDateTime.now());
+
+        TasksEntity saved = taskRepository.save(task);
+        return new ResponseWrapper<>("task created successfully", null);
     }
 
     @Override
-    public TasksEntity updateTask(Integer id, TasksEntity task) {
-        TasksEntity tasks = taskRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Task not found"));
-        tasks.setTaskDate(task.getTaskDate());
-        tasks.setTaskName(task.getTaskName());
-        tasks.setStatus(task.getStatus());
-        tasks.setPercentComplete(task.getPercentComplete());
-        tasks.setRemarks(task.getRemarks());
-        tasks.setProject(task.getProject());
-        tasks.setUpdatedAt(task.getUpdatedAt());
-        return taskRepository.save(task);
+    public ResponseWrapper<TasksEntity> updateTask(Integer id, TasksDto dto) {
+        TasksEntity existing = taskRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("task not found"));
+
+        ProjectsEntity project = projectRepository.findById(dto.getProjectId())
+                .orElseThrow(() -> new RuntimeException("Project not found with id: " + dto.getProjectId()));
+
+        BeanUtils.copyProperties(dto, existing,"taskId"); // Copy all matching fields from DTO
+        existing.setProject(project);
+        existing.setUpdatedAt(LocalDateTime.now());
+
+        TasksEntity updated =taskRepository.save(existing);
+        return new ResponseWrapper<>("task updated successfully", null);
     }
 
     @Override
-    public void deleteTask(Integer id) {
-        taskRepository.deleteById(id);
+    public ResponseWrapper<String> deleteTask(Integer id) {
+        TasksEntity task = taskRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("task not found"));
 
+        task.setIsDeleted(true);  // Mark as deleted
+        taskRepository.save(task); // Save the updated project
+
+        return new ResponseWrapper<>("task deleted successfully",null);
     }
 
     @Override
-    public TasksEntity getTaskById(Integer id) {
-        return taskRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Task not found"));
+    public ResponseWrapper<TasksEntity> getTaskById(Integer id) {
+        TasksEntity task = taskRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("task not found"));
+        return new ResponseWrapper<>("task fetched successfully", task);
     }
 
     @Override
-    public List<TasksEntity> getAllTasks() {
-        return taskRepository.findAll();
+    public ResponseWrapper<List<TasksEntity>> getAllTasks() {
+        List<TasksEntity> list = taskRepository.findAll();
+        return new ResponseWrapper<>("All Tasks fetched successfully", list);
+
     }
 }

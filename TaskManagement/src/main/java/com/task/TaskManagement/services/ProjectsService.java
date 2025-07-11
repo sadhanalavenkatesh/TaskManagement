@@ -9,6 +9,7 @@ import java.util.List;
 public interface ProjectsService {
     ResponseWrapper<ProjectsEntity> createProject(ProjectsDto dto);
     ResponseWrapper<ProjectsEntity> updateProject(Integer id, ProjectsDto dto);
+    //ResponseWrapper<String> deleteProject(Integer id);
     ResponseWrapper<String> deleteProject(Integer id);
     ResponseWrapper<ProjectsEntity> getProjectById(Integer id);
     ResponseWrapper<List<ProjectsEntity>> getAllProjects();
